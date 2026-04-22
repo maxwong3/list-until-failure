@@ -1,3 +1,5 @@
+# For MLB API, not currently being used.
+
 import statsapi
 import logging
 logger = logging.getLogger('statsapi')
