@@ -7,3 +7,10 @@ body {
 #inputPlayer {
     height:20px;
 }
+#tryAgain {
+  padding:5px;
+}
+
+.playerCard {
+  padding:5px;
+}

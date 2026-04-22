@@ -8,12 +8,17 @@
         <title>list baseball players until failure</title>
     </head>
         <body>
-            <h1>list baseball players who played on the mets</h1>
-            <h3>Score: </h3>
-            <h4 id="timer">1:00</h4>
-            <form>
+            <h1>list baseball players</h1>
+            <h3>Score: <span id="score"></span></h3>
+            <h4 id="timer">60</h4>
+            <form id="inputForm">
                 <input type="text" id="inputPlayer">
             </form>
+            <div id="tryAgain"></div>
+            <div class="guessed">
+                <h2>Guessed Players</h2>
+                <div id="guessedList"></div>
+            </div>
             <script src="/static/script.js"></script>
         </body>
 </html>
