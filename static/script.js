@@ -21,11 +21,25 @@ function startTimer() {
     }, 1000)
 }
 
+async function checkPlayer(name) {
+    const res = await fetch(`http://localhost:8000/check?name=${name}`)
+
+    if (!res.ok) {
+        console.error("Error: ", await res.text());
+        return;
+    }
+
+    const data = await res.json();
+
+    console.log(data);
+    return data;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("keydown", function(e) {
         if (e.key === "Enter") {
             e.preventDefault();
-            console.log("Text entered:", input.value);
+            checkPlayer(input.value);
             input.value = "";
             startTimer();
         }
