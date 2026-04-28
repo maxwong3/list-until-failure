@@ -68,7 +68,7 @@ function addPlayerToList(player) {
 async function checkPlayer(name) {
     if (gameEnd === true) return;
 
-    const res = await fetch(`http://localhost:8000/check?name=${name}`)
+    const res = await fetch(`/check?name=${name}`)
 
     if (!res.ok) {
         console.error("Error: ", await res.text());
