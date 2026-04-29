@@ -5,12 +5,15 @@
         <meta name="viewport" content="width=device-width", initial-scale="1.0">
         <link rel="stylesheet" href="/static/style.css"/>
         <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+        <link href="https://fonts.google.com/share?selection.family=Figtree:ital,wght@0,300..900;1,300..900" rel="stylesheet" />
         <title>list baseball players until failure</title>
     </head>
         <body>
             <h1>list baseball players</h1>
-            <h3>Score: <span id="score"></span></h3>
-            <h4 id="timer">60</h4>
+            <div class="scoreboard">
+                <h3 class="scorebug"><span id="score">0</span></h3>
+                <h4 class="scorebug">Time: <span id="timer">60</span></h4>
+            </div>
             <form id="inputForm">
                 <input type="text" id="inputPlayer">
             </form>

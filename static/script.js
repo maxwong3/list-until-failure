@@ -31,11 +31,14 @@ function endGame() {
     if (gameEnd === true) return;
     gameEnd = true;
     const button = document.createElement("button");
+    const copyButton = document.createElement("button");
     button.innerText = "Try Again";
     button.addEventListener("click", restartGame);
+    copyButton.innerText = "Copy Results";
+    copyButton.addEventListener("click", copyResults);
     tryAgain.appendChild(button);
+    tryAgain.appendChild(copyButton);
 }
-
 function restartGame() {
     timeRemaining = SECONDS;
     score = 0;
@@ -54,6 +57,17 @@ function restartGame() {
     input.value = "";
     guessedList.innerHTML = "";
 }
+function copyResults() {
+    const text = "Players listed: " + score + "\n--------------------------\n" + [...guessedPlayers].join("\n") + "--------------------------\nhttps://baseball-until-failure.onrender.com";
+
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            console.log("Copied!");
+        })
+        .catch(err => {
+            console.error("Copy failed:", err);
+        });
+}
 
 function addPlayerToList(player) {
     const div = document.createElement("div");
@@ -62,7 +76,25 @@ function addPlayerToList(player) {
     Born: ${player.birthYear || "?"}-${player.birthMonth || "?"}-${player.birthDay || "?"}, ${player.birthCity || ""}, ${player.birthState || ""}, ${player.birthCountry || ""} <br>
     Debut: ${player.debut || "?"}`
 
-    guessedList.appendChild(div);
+    guessedList.prepend(div);
+}
+
+function updateScoreStyle() {
+    scoreboard.classList.remove("score-one", "score-two", "score-three", "score-four");
+
+    if (score < 3) {
+        scoreboard.classList.add("score-one");
+    } else if (score < 5) {
+        scoreboard.classList.add("score-two");
+    } else if (score < 10) {
+        scoreboard.classList.add("score-three");
+    } else if (score < 20) {
+        scoreboard.classList.add("score-four");
+    } else if (score < 50) {
+        scoreboard.classList.add("score-five");
+    } else {
+        scoreboard.classList.add("score-six");
+    }
 }
 
 async function checkPlayer(name) {
@@ -77,10 +109,11 @@ async function checkPlayer(name) {
 
     const data = await res.json();
     if (data["count"] >= 1 && !guessedPlayers.has(name.toUpperCase().trim())) {
-        guessedPlayers.add(name.toUpperCase().trim());
+        guessedPlayers.add(name.trim());
         timeRemaining += 6;
         score++;
         scoreboard.innerText = score;
+        updateScoreStyle();
         for (let i = 0; i < data["players"].length; i++) {
             addPlayerToList(data["players"][i]);
         }
@@ -92,6 +125,7 @@ async function checkPlayer(name) {
 
 document.addEventListener("DOMContentLoaded", () => {
     gameEnd = false;
+    scoreboard.classList.add("score-one");
     input.addEventListener("keydown", function(e) {
         if (e.key === "Enter") {
             e.preventDefault();

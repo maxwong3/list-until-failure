@@ -1,16 +1,163 @@
 body {
   font-family:'Roboto', sans-serif;
   text-align:center;
-  background-color:gray;
-  color:black;
+  background-color:#001830;
+  color:white;
 }
+
+.scoreboard {
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  gap: 30px;
+  margin-bottom: 20px;
+  font-family: 'Figtree', sans-serif;
+  color:#0a3057;
+}
+
+.scorebug {
+  background: #f4f1ea;
+  border: 1px solid #595750;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 18px;
+}
+
+.score-one {
+  font-size:25px;
+  color:gray;
+}
+.score-two {
+  color:#0a3057;
+  font-size:30px;
+}
+.score-three {
+  color:#d40032;
+  font-size:35px;
+}
+.score-four {
+  color:#a61f1f;
+  font-size:35px;
+  animation: red-glow 1.5s linear infinite alternate;
+}
+.score-five {
+  color:#ccb22f;
+  font-size:40px;
+  text-shadow: 0 0 5px black;
+  -webkit-animation: gold-glow 1s ease-in-out infinite alternate;
+  -moz-animation: gold-glow 1s ease-in-out infinite alternate;
+  animation: gold-glow 1s ease-in-out infinite alternate;
+}
+.score-six {
+    font-size:50px;
+    text-shadow:
+    0 0 5px rgba(255, 0, 0, 0.8),
+    0 0 10px rgba(255, 165, 0, 0.6),
+    0 0 20px rgba(255, 255, 0, 0.4);
+    background: linear-gradient(
+    45deg,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow-glow 1s ease-in-out infinite alternate;
+}
+@keyframes red-glow {
+  0% {
+    text-shadow:
+      0 0 5px #ff4d4d,
+      0 0 10px #ff1a1a,
+      0 0 20px #b30000;
+  }
+
+  100% {
+    text-shadow:
+      0 0 10px #ff9999,
+      0 0 20px #ff1a1a,
+      0 0 30px #800000;
+  }
+}
+@keyframes gold-glow {
+  0% {
+    text-shadow:
+      0 0 5px #fff3b0,
+      0 0 10px #ffd700,
+      0 0 20px #ffcc00,
+      0 0 30px #b8860b;
+  }
+
+  100% {
+    text-shadow:
+      0 0 10px #fff8cc,
+      0 0 20px #ffdf4d,
+      0 0 30px #ffb700,
+      0 0 40px #a87400;
+  }
+}
+@keyframes rainbow-glow {
+  0% {
+    text-shadow:
+      0 0 5px red,
+      0 0 10px orange;
+  }
+
+  25% {
+    text-shadow:
+      0 0 5px yellow,
+      0 0 10px green;
+  }
+
+  50% {
+    text-shadow:
+      0 0 5px blue,
+      0 0 10px indigo;
+  }
+
+  75% {
+    text-shadow:
+      0 0 5px violet,
+      0 0 10px red;
+  }
+
+  100% {
+    text-shadow:
+      0 0 5px orange,
+      0 0 10px yellow;
+  }
+}
+
 #inputPlayer {
     height:20px;
 }
 #tryAgain {
   padding:5px;
+  color:#d40032
 }
 
 .playerCard {
-  padding:5px;
+  padding:10px;
+  border-style:solid;
+  border-color:#263340;
+  border-width:3px;
+  width:400px;
+  margin: 10px auto;
+}
+
+.playerCard strong {
+  font-weight: 600;
+  font-size: 18px;
+  font-style: 'Regular 400';
+  margin: 5px 0px;
+}
+
+.guessed {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 300;
 }
