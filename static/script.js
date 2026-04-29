@@ -111,8 +111,6 @@ async function checkPlayer(name) {
         console.error("Error: ", await res.text());
         return;
     }
-
-    for ()
     
     const data = await res.json();
     if (data["count"] >= 1 && !guessedPlayers.has(name.toUpperCase().trim())) {
