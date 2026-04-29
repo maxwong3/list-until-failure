@@ -63,7 +63,7 @@ function restartGame() {
     guessedList.innerHTML = "";
 }
 function copyResults() {
-    const text = "Players listed: " + score + "\n--------------------------\n" + [...guessedPlayers].join("\n") + "\n--------------------------\nhttps://baseball-until-failure.onrender.com";
+    const text = "Players listed: " + score + "\n--------------------------\n" + [...guessedPlayers].map(name => name.toLowerCase()).join("\n") + "\n--------------------------\nhttps://baseball-until-failure.onrender.com";
 
     navigator.clipboard.writeText(text)
         .then(() => {
@@ -74,12 +74,13 @@ function copyResults() {
         });
 }
 
-function addPlayerToList(player) {
+function addPlayerToList(player, teams, positions) {
     const div = document.createElement("div");
     div.classList.add("playerCard");
     div.innerHTML = `<strong>${player.nameFirst} ${player.nameLast}</strong><br>
-    Born: ${player.birthYear || "?"}-${player.birthMonth || "?"}-${player.birthDay || "?"}, ${player.birthCity || ""}, ${player.birthState || ""}, ${player.birthCountry || ""} <br>
-    Debut: ${player.debut || "?"}`
+    ${positions.join(", ")}<br>
+    Teams: ${teams.join(", ")}<br>
+    Born: ${player.birthYear || "?"}-${player.birthMonth || "?"}-${player.birthDay || "?"}, ${player.birthCity || ""}, ${player.birthState || ""}, ${player.birthCountry || ""} <br>`
 
     guessedList.prepend(div);
 }
@@ -126,7 +127,7 @@ async function checkPlayer(name) {
         scoreboard.innerText = score;
         updateScoreStyle();
         for (let i = 0; i < data["players"].length; i++) {
-            addPlayerToList(data["players"][i]);
+            addPlayerToList(data["players"][i], data["teams"][i], data["positions"][i]);
         }
     }
 
