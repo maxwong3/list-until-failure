@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Path
 import numpy as np
 
 app = FastAPI()
@@ -13,6 +14,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/static", StaticFiles (directory="static"), name="static")
 
 df = pd.read_csv("lahman_1871-2025_db/People.csv")
 
@@ -35,5 +38,11 @@ def check (name: str):
         "players": players.to_dict(orient="records")
     }
 
+@app.get("/favicon.ico")
+def favicon():
+    return FileResponse("static/favicon.ico")
 
-app.mount("/static", StaticFiles (directory="static"), name="static")
+@app.get("/{page}")
+def pages(page: str):
+    return FileResponse(f"static/{page}.html")
+

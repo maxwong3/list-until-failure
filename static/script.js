@@ -4,6 +4,11 @@ const scoreboard = document.getElementById("score");
 const tryAgain = document.getElementById("tryAgain");
 const inputForm = document.getElementById("inputForm");
 const guessedList = document.getElementById("guessedList");
+
+const mainTitle = document.getElementById("mainTitle");
+const dailyButton = document.getElementById("dailyButton");
+const aboutButton = document.getElementById("aboutButton");
+
 const SECONDS = 60;
 const guessedPlayers = new Set();
 let score = 0;
@@ -124,7 +129,7 @@ async function checkPlayer(name) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    gameEnd = false;
+    restartGame();
     scoreboard.classList.add("score-one");
     input.addEventListener("keydown", function(e) {
         if (e.key === "Enter") {
@@ -134,5 +139,16 @@ document.addEventListener("DOMContentLoaded", () => {
             startTimer();
         }
     });
-
 })
+
+dailyButton.addEventListener("click", () => {
+    window.location.href = "/daily"; 
+});
+
+aboutButton.addEventListener("click", () => {
+    window.location.href = "/about";
+});
+
+mainTitle.addEventListener("click", () => {
+    window.location.href = "/";
+});

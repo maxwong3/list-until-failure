@@ -5,6 +5,56 @@ body {
   color:white;
 }
 
+#nav-bar {
+  display:grid;
+  align-items:center;
+  grid-template-columns: 1fr auto 1fr;
+  padding: 10px 20px;
+}
+#dailyButton {
+  justify-self:left;
+  justify-content:center;
+  margin-left:50px;
+  border-style:solid;
+  border-color:white;
+  border-width:2px;
+  padding: 20px 30px;
+  border-radius: 5px;
+}
+#dailyButton:hover {
+  border-color:#d40032;
+  color:#d40032;
+}
+#aboutButton {
+  justify-self:end;
+  justify-content:center;
+  margin-right:50px;
+  border-style:solid;
+  border-color:white;
+  border-width:2px;
+  padding: 20px 30px;
+  border-radius: 5px;
+}
+#aboutButton:hover {
+  border-color:#d40032;
+  color:#d40032;
+}
+#nav-bar h1 {
+  justify-self:center;
+  justify-content:center;
+  margin-right:50px;
+  border-style:solid;
+  border-color:white;
+  border-width:2px;
+  padding: 20px 30px;
+  margin-left:40px;
+  border-radius: 5px;
+}
+#nav-bar h1:hover {
+  border-color:#d40032;
+  color:#d40032;
+}
+
 .scoreboard {
   display: flex;
   justify-content: center;
@@ -144,10 +194,14 @@ body {
 .playerCard {
   padding:10px;
   border-style:solid;
-  border-color:#263340;
-  border-width:3px;
+  border-color:#d40032;
+  border-width:2px;
+  border-radius:5px;
   width:400px;
   margin: 10px auto;
+}
+.playerCard:hover {
+  border-color:white;
 }
 
 .playerCard strong {
@@ -160,4 +214,24 @@ body {
 .guessed {
   font-family: 'Figtree', sans-serif;
   font-weight: 300;
+}
+
+
+
+
+-- About page
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.about-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* THIS is what pushes footer down */
+.about-page main {
+  flex: 1;
 }
