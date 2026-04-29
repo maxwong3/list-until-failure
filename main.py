@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Path
 import numpy as np
+import unicodedata
 
 app = FastAPI()
 
@@ -17,9 +18,11 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles (directory="static"), name="static")
 
+def strip_accents(s):
+   return ''.join(c for c in unicodedata.normalize('NFD', s)
+                  if unicodedata.category(c) != 'Mn')
 df = pd.read_csv("lahman_1871-2025_db/People.csv")
-
-df["fullName"] = (df["nameFirst"].fillna("") + " " + df["nameLast"].fillna("")).str.upper() 
+df["fullName"] = (df["nameFirst"].fillna("") + " " + df["nameLast"].fillna("")).apply(strip_accents).str.upper()
  
 @app.get("/")
 def home():
@@ -45,4 +48,3 @@ def favicon():
 @app.get("/{page}")
 def pages(page: str):
     return FileResponse(f"static/{page}.html")
-

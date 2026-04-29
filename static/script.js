@@ -102,9 +102,15 @@ function updateScoreStyle() {
     }
 }
 
+function replaceChars(str, charMap) {
+  return [...str]
+    .map(c => charMap[c] || c)
+    .join('');
+}
+
 async function checkPlayer(name) {
     if (gameEnd === true) return;
-
+    
     const res = await fetch(`/check?name=${name}`)
 
     if (!res.ok) {
@@ -114,7 +120,7 @@ async function checkPlayer(name) {
     
     const data = await res.json();
     if (data["count"] >= 1 && !guessedPlayers.has(name.toUpperCase().trim())) {
-        guessedPlayers.add(name.trim());
+        guessedPlayers.add(name.toUpperCase().trim());
         timeRemaining += 6;
         score++;
         scoreboard.innerText = score;
