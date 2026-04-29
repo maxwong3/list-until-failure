@@ -63,7 +63,7 @@ function restartGame() {
     guessedList.innerHTML = "";
 }
 function copyResults() {
-    const text = "Players listed: " + score + "\n--------------------------\n" + [...guessedPlayers].join("\n") + "--------------------------\nhttps://baseball-until-failure.onrender.com";
+    const text = "Players listed: " + score + "\n--------------------------\n" + [...guessedPlayers].join("\n") + "\n--------------------------\nhttps://baseball-until-failure.onrender.com";
 
     navigator.clipboard.writeText(text)
         .then(() => {
@@ -112,6 +112,8 @@ async function checkPlayer(name) {
         return;
     }
 
+    for ()
+    
     const data = await res.json();
     if (data["count"] >= 1 && !guessedPlayers.has(name.toUpperCase().trim())) {
         guessedPlayers.add(name.trim());
