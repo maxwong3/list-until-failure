@@ -5,6 +5,7 @@ const tryAgain = document.getElementById("tryAgain");
 const inputForm = document.getElementById("inputForm");
 const guessedList = document.getElementById("guessedList");
 
+const path = window.location.pathname;
 const mainTitle = document.getElementById("mainTitle");
 const dailyButton = document.getElementById("dailyButton");
 const aboutButton = document.getElementById("aboutButton");
@@ -15,6 +16,16 @@ let score = 0;
 let interval = null;
 let timeRemaining = SECONDS;
 let gameEnd = true;
+
+// daily.html
+const dailyDate = document.getElementById("dailyDate");
+const todaysChallenge = document.getElementById("todaysChallenge");
+const monthYearElement = document.getElementById("monthYear");
+const datesElement = document.getElementById("dates");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+let calendarDate = new Date();
+const today = new Date();
 
 function startTimer() {
     if (interval) return;
@@ -50,6 +61,9 @@ function restartGame() {
     gameEnd = false;
 
     scoreboard.innerText = 0;
+    scoreboard.className = '';
+    scoreboard.classList.add("score-one");
+    
     timer.innerText = SECONDS;
     guessedPlayers.clear();
 
@@ -91,14 +105,19 @@ function updateScoreStyle() {
     if (score < 3) {
         scoreboard.classList.add("score-one");
     } else if (score < 5) {
+        scoreboard.className = '';
         scoreboard.classList.add("score-two");
     } else if (score < 10) {
+        scoreboard.className = '';
         scoreboard.classList.add("score-three");
     } else if (score < 20) {
+        scoreboard.className = '';
         scoreboard.classList.add("score-four");
     } else if (score < 50) {
+        scoreboard.className = '';
         scoreboard.classList.add("score-five");
     } else {
+        scoreboard.className = '';
         scoreboard.classList.add("score-six");
     }
 }
@@ -137,7 +156,6 @@ async function checkPlayer(name) {
 
 document.addEventListener("DOMContentLoaded", () => {
     restartGame();
-    scoreboard.classList.add("score-one");
     input.addEventListener("keydown", function(e) {
         if (e.key === "Enter") {
             e.preventDefault();
@@ -148,6 +166,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 })
 
+function updateDaily() {
+    let date = `${today.toLocaleString("en-US", { month: "long" })} ${today.getDate()}, ${today.getFullYear()}`;
+    dailyDate.innerText = date;
+}
 dailyButton.addEventListener("click", () => {
     window.location.href = "/daily"; 
 });
@@ -159,3 +181,51 @@ aboutButton.addEventListener("click", () => {
 mainTitle.addEventListener("click", () => {
     window.location.href = "/";
 });
+
+if (path === "/daily") {
+    updateDaily();
+}
+const updateCalendar = () => {
+    const currentYear = calendarDate.getFullYear();
+    const currentMonth = calendarDate.getMonth();
+
+    const firstDay = new Date(currentYear, currentMonth,0);
+    const lastDay = new Date(currentYear, currentMonth +1, 0);
+    const totalDays = lastDay.getDate();
+    const firstDayIndex = firstDay.getDay();
+    const lastDayIndex = lastDay.getDay();
+
+    const monthYearString = calendarDate.toLocaleString('default', {month: 'long', year: 'numeric'});
+    monthYearElement.textContent = monthYearString;
+
+    let datesHTML = '';
+
+    for (let i = firstDayIndex; i > 0; i--) {
+        const prevDate = new Date(currentYear, currentMonth, 0 - i+ 1);
+        datesHTML += `<div class="date inactive">${prevDate.getDate()}</div>`;
+    }
+
+    for (let i = 1; i <= totalDays; i++) {
+        const date = new Date(currentYear, currentMonth, i);
+        const activeClass = date.toDateString() === new Date().toDateString() ? 'today' : 'active';
+        datesHTML += `<div class = "date ${activeClass}">${i}</div>`;
+    }
+
+    for (let i = 1; i <= 7 - lastDayIndex; i++) {
+        const nextDate = new Date(currentYear, currentMonth + 1, i);
+        datesHTML += `<div class="date inactive">${nextDate.getDate()}</div>`;
+    }
+    datesElement.innerHTML = datesHTML;
+}
+
+prevBtn.addEventListener('click', () => {
+    calendarDate.setMonth(calendarDate.getMonth() - 1);
+    updateCalendar();
+})
+
+nextBtn.addEventListener('click', () => {
+    calendarDate.setMonth(calendarDate.getMonth() + 1);
+    updateCalendar();
+})
+
+updateCalendar();
