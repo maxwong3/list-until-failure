@@ -20,6 +20,8 @@ let gameEnd = true;
 // daily.html
 const dailyDate = document.getElementById("dailyDate");
 const todaysChallenge = document.getElementById("todaysChallenge");
+const todayTitle = document.getElementById("todayTitle");
+const calendar = document.getElementsByClassName("calendar");
 const monthYearElement = document.getElementById("monthYear");
 const datesElement = document.getElementById("dates");
 const prevBtn = document.getElementById("prevBtn");
@@ -54,6 +56,7 @@ function endGame() {
     copyButton.addEventListener("click", copyResults);
     tryAgain.appendChild(button);
     tryAgain.appendChild(copyButton);
+    todayTitle.style.display = "flex";
 }
 function restartGame() {
     timeRemaining = SECONDS;
@@ -66,6 +69,9 @@ function restartGame() {
     
     timer.innerText = SECONDS;
     guessedPlayers.clear();
+
+    calendar[0].style.display = "none";
+    todayTitle.style.display = "none";
 
     if (interval) {
         clearInterval(interval);
@@ -131,6 +137,11 @@ function replaceChars(str, charMap) {
 async function checkPlayer(name) {
     if (gameEnd === true) return;
     
+    if (name === "admin.endGame") {
+        timeRemaining = 0;
+        endGame();
+        return;
+    }
     const res = await fetch(`/check?name=${name}`)
 
     if (!res.ok) {
@@ -180,6 +191,13 @@ aboutButton.addEventListener("click", () => {
 
 mainTitle.addEventListener("click", () => {
     window.location.href = "/";
+});
+
+dailyDate.addEventListener("click", () => {
+    if (gameEnd === true) {
+        if (calendar[0].style.display === "none") calendar[0].style.display = "flex";
+        else calendar[0].style.display = "none";
+    }
 });
 
 if (path === "/daily") {

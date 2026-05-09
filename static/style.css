@@ -55,15 +55,6 @@ body {
   color:#d40032;
 }
 
-#todaysChallenge {
-  font-family: 'Figtree', sans-serif !important;
-  font-size:30px;
-}
-#dailyDate {
-  border:black;
-  border-width: 5px;
-}
-
 .scoreboard {
   display: flex;
   justify-content: center;
@@ -252,10 +243,51 @@ body.daily-page {
   font-size:20px;
 }
 
+#todaysChallenge {
+  font-family: 'Figtree' sans-serif !important;
+  font-size:20px;
+  font-style:oblique;
+  background-color: #595750;
+  margin-left:20%;
+  margin-right:20%;
+  margin-top:0%;
+}
+#dailyDate {
+  display:inline-block;
+  padding: 0px;
+}
+#dailyDate:hover{
+  color:#d40032;
+}
+
+
+#todayTitle {
+  text-align:center;
+  display:none;
+  padding: 10px 10px 10px 10px;
+  margin-left:40%;
+  margin-right:40%;
+  border-radius:px;
+  color: gray;
+}
+
+#challenge {
+  margin-left:30%;
+  margin-right:30%;
+  margin-top:10px;
+  padding: 20px 20px;
+}
+
+
+.calendarContainer {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 .calendar {
   width:450px;
   height:auto;
-  display: flex;
+  display: none;
   flex-direction:column;
   padding: 10px;
   color:black;
@@ -342,6 +374,3 @@ body.daily-page {
   color: #d2d2d2;
 }
 
-.date.inactive:hover {
-  color: white;
-}
