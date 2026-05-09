@@ -259,7 +259,16 @@ body.daily-page {
 #dailyDate:hover{
   color:#d40032;
 }
-
+.dailyTitle {
+  margin-top:0;
+  font-style:oblique;
+  background-color: #d40032;
+  display:block;
+  margin-left:42%;
+  margin-right:42%;
+  padding:5px 5px;
+  margin-bottom:0;
+}
 
 #todayTitle {
   text-align:center;

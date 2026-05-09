@@ -21,7 +21,7 @@ let gameEnd = true;
 const dailyDate = document.getElementById("dailyDate");
 const todaysChallenge = document.getElementById("todaysChallenge");
 const todayTitle = document.getElementById("todayTitle");
-const calendar = document.getElementsByClassName("calendar");
+const calendar = document.querySelector(".calendar");
 const monthYearElement = document.getElementById("monthYear");
 const datesElement = document.getElementById("dates");
 const prevBtn = document.getElementById("prevBtn");
@@ -70,8 +70,8 @@ function restartGame() {
     timer.innerText = SECONDS;
     guessedPlayers.clear();
 
-    calendar[0].style.display = "none";
-    todayTitle.style.display = "none";
+    if (calendar) calendar.style.display = "none";
+    if (todayTitle) todayTitle.style.display = "none";
 
     if (interval) {
         clearInterval(interval);
@@ -142,7 +142,7 @@ async function checkPlayer(name) {
         endGame();
         return;
     }
-    const res = await fetch(`/check?name=${name}`)
+    const res = await fetch(`/api/check?name=${name}`)
 
     if (!res.ok) {
         console.error("Error: ", await res.text());
@@ -189,16 +189,20 @@ aboutButton.addEventListener("click", () => {
     window.location.href = "/about";
 });
 
-mainTitle.addEventListener("click", () => {
-    window.location.href = "/";
-});
+if (mainTitle) {
+    mainTitle.addEventListener("click", () => {
+        window.location.href = "/";
+    });
+}
 
-dailyDate.addEventListener("click", () => {
-    if (gameEnd === true) {
-        if (calendar[0].style.display === "none") calendar[0].style.display = "flex";
-        else calendar[0].style.display = "none";
-    }
-});
+if (dailyDate) {
+    dailyDate.addEventListener("click", () => {
+        if (gameEnd === true) {
+            if (calendar.style.display === "none") calendar.style.display = "flex";
+            else calendar.style.display = "none";
+        }
+    });
+}
 
 if (path === "/daily") {
     updateDaily();
@@ -214,7 +218,7 @@ const updateCalendar = () => {
     const lastDayIndex = lastDay.getDay();
 
     const monthYearString = calendarDate.toLocaleString('default', {month: 'long', year: 'numeric'});
-    monthYearElement.textContent = monthYearString;
+    if (monthYearElement) monthYearElement.textContent = monthYearString;
 
     let datesHTML = '';
 
@@ -233,17 +237,21 @@ const updateCalendar = () => {
         const nextDate = new Date(currentYear, currentMonth + 1, i);
         datesHTML += `<div class="date inactive">${nextDate.getDate()}</div>`;
     }
-    datesElement.innerHTML = datesHTML;
+    if (datesElement) datesElement.innerHTML = datesHTML;
+
 }
 
-prevBtn.addEventListener('click', () => {
-    calendarDate.setMonth(calendarDate.getMonth() - 1);
-    updateCalendar();
-})
-
-nextBtn.addEventListener('click', () => {
-    calendarDate.setMonth(calendarDate.getMonth() + 1);
-    updateCalendar();
-})
+if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+        calendarDate.setMonth(calendarDate.getMonth() - 1);
+        updateCalendar();
+    })
+}
+if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+        calendarDate.setMonth(calendarDate.getMonth() + 1);
+        updateCalendar();
+    })
+}
 
 updateCalendar();
