@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 import pandas as pd
+import numpy as np
 import unicodedata
  
 router = APIRouter()
@@ -43,7 +44,11 @@ def get_teams(player_id):
     player_df = apps_df[apps_df["playerID"] == player_id]
     for _, row in player_df.iterrows():
         if row["teamID"] not in teams:
-            teams.append(row["teamID"])
+            if row["teamID"] in teamDict:
+                if teamDict[row["teamID"]] not in teams:
+                    teams.append(teamDict[row["teamID"]])
+            else:
+                teams.append(row["teamID"])
     return teams
 def get_positions(player_id):
     player_df = apps_df[apps_df["playerID"] == player_id]
