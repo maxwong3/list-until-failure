@@ -253,6 +253,7 @@ body.daily-page {
 }
 
 .calendar {
+  align-items:center;
   width:450px;
   height:auto;
   display: flex;
