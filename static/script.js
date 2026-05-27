@@ -153,7 +153,7 @@ async function checkPlayer(name) {
     if (data["count"] >= 1 && !guessedPlayers.has(name.toUpperCase().trim())) {
         guessedPlayers.add(name.toUpperCase().trim());
         timeRemaining += 6;
-        score++;
+        score += data["count"];
         scoreboard.innerText = score;
         updateScoreStyle();
         for (let i = 0; i < data["players"].length; i++) {
