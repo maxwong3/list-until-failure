@@ -8,4 +8,4 @@ team_df = pd.read_csv("lahman_1871-2025_db/Teams.csv")
 apps_df = pd.read_csv("lahman_1871-2025_db/Appearances.csv")
 sal_df = pd.read_csv("lahman_1871-2025_db/Salaries.csv")
 
-print(sal_df[sal_df["teamID"] == "ML4"])
+print(sal_df["teamID"].unique())
