@@ -158,7 +158,7 @@ async function checkPlayer(name) {
         endGame();
         return;
     }
-    const res = await fetch(`/api/check?name=${name}`)
+    const res = await fetch(`/api/dailycheck?name=${name}`)
 
     if (!res.ok) {
         console.error("Error: ", await res.text());

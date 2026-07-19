@@ -2,6 +2,10 @@ from fastapi import APIRouter
 import pandas as pd
 import numpy as np
 import unicodedata
+
+from shared.db import get_player_by_name, get_positions_by_id, get_teams_by_id
+from services.daily_challenge import get_daily_challenge
+
  
 router = APIRouter()
 
@@ -77,6 +81,31 @@ def check (name: str):
     return {
         "count": len(players),
         "players": players.to_dict(orient="records"),
+        "teams": teams,
+        "positions": positions
+    }
+
+@router.get("/dailycheck")
+def daily_check(name: str):
+    name = name.upper().strip()
+
+    valid_players = get_daily_challenge()
+
+    if name not in valid_players:
+        return {"count": 0, "players": []}
+    
+    players = get_player_by_name(name)
+
+    teams = []
+    positions = []
+    
+    for player in players:
+        teams.append(get_teams_by_id(player["playerID"]))
+        positions.append(get_positions_by_id(player["playerID"]))
+
+    return {
+        "count": len(players),
+        "players": [dict(player) for player in players],
         "teams": teams,
         "positions": positions
     }
