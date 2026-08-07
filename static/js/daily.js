@@ -29,232 +29,262 @@ let interval = null;
 let timeRemaining = SECONDS;
 let gameEnd = true;
 
-
 function updateDaily() {
-    let date = `${today.toLocaleString("en-US", { month: "long" })} ${today.getDate()}, ${today.getFullYear()}`;
-    dailyDate.innerText = date;
+  let date = `${today.toLocaleString("en-US", { month: "long" })} ${today.getDate()}, ${today.getFullYear()}`;
+  dailyDate.innerText = date;
 }
 
 if (dailyDate) {
-    dailyDate.addEventListener("click", () => {
-        if (gameEnd === true) {
-            if (calendar.style.display === "none") calendar.style.display = "flex";
-            else calendar.style.display = "none";
-        }
-    });
+  dailyDate.addEventListener("click", () => {
+    if (gameEnd === true) {
+      if (calendar.style.display === "none") calendar.style.display = "flex";
+      else calendar.style.display = "none";
+    }
+  });
+}
+
+async function loadDailyChallenge() {
+  const res = await fetch("/api/daily");
+
+  if (!res.ok) {
+    console.error("Failed to load daily challenge");
+    return;
+  }
+
+  const data = await res.json();
+
+  todaysChallenge.innerHTML = `Past and Present ${data.title} (1871-2025)<br><span>$</span>`;
 }
 
 function startTimer() {
-    if (interval) return;
-    interval = setInterval(() => {
-        timeRemaining--;
+  if (interval) return;
+  interval = setInterval(() => {
+    timeRemaining--;
 
-        if (timeRemaining <= 0) {
-            clearInterval(interval);
-            interval = null;
-            timer.innerText = "Out of time!";
-            endGame();
-        } else {
-            timer.innerText = timeRemaining;
-        }
-    }, 1000)
+    if (timeRemaining <= 0) {
+      clearInterval(interval);
+      interval = null;
+      timer.innerText = "Out of time!";
+      endGame();
+    } else {
+      timer.innerText = timeRemaining;
+    }
+  }, 1000);
 }
 
 function endGame() {
-    if (gameEnd === true) return;
-    gameEnd = true;
-    const button = document.createElement("button");
-    const copyButton = document.createElement("button");
-    button.innerText = "Try Again";
-    button.addEventListener("click", restartGame);
-    copyButton.innerText = "Copy Results";
-    copyButton.addEventListener("click", copyResults);
-    tryAgain.appendChild(button);
-    tryAgain.appendChild(copyButton);
-    todayTitle.style.display = "flex";
+  if (gameEnd === true) return;
+  gameEnd = true;
+  const button = document.createElement("button");
+  const copyButton = document.createElement("button");
+  button.innerText = "Try Again";
+  button.addEventListener("click", restartGame);
+  copyButton.innerText = "Copy Results";
+  copyButton.addEventListener("click", copyResults);
+  tryAgain.appendChild(button);
+  tryAgain.appendChild(copyButton);
+  todayTitle.style.display = "flex";
 }
 function restartGame() {
-    timeRemaining = SECONDS;
-    score = 0;
-    gameEnd = false;
+  timeRemaining = SECONDS;
+  score = 0;
+  gameEnd = false;
 
-    scoreboard.innerText = 0;
-    scoreboard.className = '';
-    scoreboard.classList.add("score-one");
-    
-    timer.innerText = SECONDS;
-    guessedPlayers.clear();
+  scoreboard.innerText = 0;
+  scoreboard.className = "";
+  scoreboard.classList.add("score-one");
 
-    if (calendar) calendar.style.display = "none";
-    if (todayTitle) todayTitle.style.display = "none";
+  timer.innerText = SECONDS;
+  guessedPlayers.clear();
 
-    if (interval) {
-        clearInterval(interval);
-        interval = null;
-    }
+  if (calendar) calendar.style.display = "none";
+  if (todayTitle) todayTitle.style.display = "none";
 
-    tryAgain.innerHTML = "";
-    input.value = "";
-    guessedList.innerHTML = "";
+  if (interval) {
+    clearInterval(interval);
+    interval = null;
+  }
+
+  tryAgain.innerHTML = "";
+  input.value = "";
+  guessedList.innerHTML = "";
 }
 function copyResults() {
-    const text = "Players listed: " + score + "\n--------------------------\n" + [...guessedPlayers].map(name => name.toLowerCase()).join("\n") + "\n--------------------------\nhttps://baseball-until-failure.onrender.com";
+  const text =
+    "Players listed: " +
+    score +
+    "\n--------------------------\n" +
+    [...guessedPlayers].map((name) => name.toLowerCase()).join("\n") +
+    "\n--------------------------\nhttps://baseball-until-failure.onrender.com";
 
-    navigator.clipboard.writeText(text)
-        .then(() => {
-            console.log("Copied!");
-        })
-        .catch(err => {
-            console.error("Copy failed:", err);
-        });
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      console.log("Copied!");
+    })
+    .catch((err) => {
+      console.error("Copy failed:", err);
+    });
 }
 
 function addPlayerToList(player, teams, positions) {
-    const div = document.createElement("div");
-    div.classList.add("playerCard");
-    div.innerHTML = `<strong>${player.nameFirst} ${player.nameLast}</strong><br>
+  const div = document.createElement("div");
+  div.classList.add("playerCard");
+  div.innerHTML = `<strong>${player.nameFirst} ${player.nameLast}</strong><br>
     ${positions.join(", ")}<br>
     Teams: ${teams.join(", ")}<br>
-    Born: ${player.birthYear || "?"}-${player.birthMonth || "?"}-${player.birthDay || "?"}, ${player.birthCity || ""}, ${player.birthState || ""}, ${player.birthCountry || ""} <br>`
+    Born: ${player.birthYear || "?"}-${player.birthMonth || "?"}-${player.birthDay || "?"}, ${player.birthCity || ""}, ${player.birthState || ""}, ${player.birthCountry || ""} <br>`;
 
-    guessedList.prepend(div);
+  guessedList.prepend(div);
 }
 
 function updateScoreStyle() {
-    scoreboard.classList.remove("score-one", "score-two", "score-three", "score-four");
+  scoreboard.classList.remove(
+    "score-one",
+    "score-two",
+    "score-three",
+    "score-four",
+  );
 
-    if (score < 3) {
-        scoreboard.classList.add("score-one");
-    } else if (score < 5) {
-        scoreboard.className = '';
-        scoreboard.classList.add("score-two");
-    } else if (score < 10) {
-        scoreboard.className = '';
-        scoreboard.classList.add("score-three");
-    } else if (score < 20) {
-        scoreboard.className = '';
-        scoreboard.classList.add("score-four");
-    } else if (score < 50) {
-        scoreboard.className = '';
-        scoreboard.classList.add("score-five");
-    } else {
-        scoreboard.className = '';
-        scoreboard.classList.add("score-six");
-    }
+  if (score < 3) {
+    scoreboard.classList.add("score-one");
+  } else if (score < 5) {
+    scoreboard.className = "";
+    scoreboard.classList.add("score-two");
+  } else if (score < 10) {
+    scoreboard.className = "";
+    scoreboard.classList.add("score-three");
+  } else if (score < 20) {
+    scoreboard.className = "";
+    scoreboard.classList.add("score-four");
+  } else if (score < 50) {
+    scoreboard.className = "";
+    scoreboard.classList.add("score-five");
+  } else {
+    scoreboard.className = "";
+    scoreboard.classList.add("score-six");
+  }
 }
 
 function replaceChars(str, charMap) {
-  return [...str]
-    .map(c => charMap[c] || c)
-    .join('');
+  return [...str].map((c) => charMap[c] || c).join("");
 }
 
 // Daily check player with query
 async function checkPlayer(name) {
-    if (gameEnd === true) return;
-    
-    if (name === "admin.endGame") {
-        timeRemaining = 0;
-        endGame();
-        return;
-    }
-    const res = await fetch(`/api/dailycheck?name=${name}`)
+  if (gameEnd === true) return;
 
-    if (!res.ok) {
-        console.error("Error: ", await res.text());
-        return;
-    }
-    
-    const data = await res.json();
-    if (data["count"] >= 1 && !guessedPlayers.has(name.toUpperCase().trim())) {
-        guessedPlayers.add(name.toUpperCase().trim());
-        timeRemaining += 6;
-        score += data["count"];
-        scoreboard.innerText = score;
-        updateScoreStyle();
-        for (let i = 0; i < data["players"].length; i++) {
-            addPlayerToList(data["players"][i], data["teams"][i], data["positions"][i]);
-        }
-    }
+  if (name === "admin.endGame") {
+    timeRemaining = 0;
+    endGame();
+    return;
+  }
+  const res = await fetch(`/api/dailycheck?name=${name}`);
 
-    console.log(data);
-    return data;
+  if (!res.ok) {
+    console.error("Error: ", await res.text());
+    return;
+  }
+
+  const data = await res.json();
+  if (data["count"] >= 1 && !guessedPlayers.has(name.toUpperCase().trim())) {
+    guessedPlayers.add(name.toUpperCase().trim());
+    timeRemaining += 6;
+    score += data["count"];
+    scoreboard.innerText = score;
+    updateScoreStyle();
+    for (let i = 0; i < data["players"].length; i++) {
+      addPlayerToList(
+        data["players"][i],
+        data["teams"][i],
+        data["positions"][i],
+      );
+    }
+  }
+
+  console.log(data);
+  return data;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    restartGame();
-    input.addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            checkPlayer(input.value);
-            input.value = "";
-            startTimer();
-        }
-    });
-})
+  restartGame();
+  loadDailyChallenge();
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      checkPlayer(input.value);
+      input.value = "";
+      startTimer();
+    }
+  });
+});
 
 dailyButton.addEventListener("click", () => {
-    window.location.href = "/daily"; 
+  window.location.href = "/daily";
 });
 
 aboutButton.addEventListener("click", () => {
-    window.location.href = "/about";
+  window.location.href = "/about";
 });
 
 if (mainTitle) {
-    mainTitle.addEventListener("click", () => {
-        window.location.href = "/";
-    });
+  mainTitle.addEventListener("click", () => {
+    window.location.href = "/";
+  });
 }
 
 if (path === "/daily") {
-    updateDaily();
+  updateDaily();
 }
 const updateCalendar = () => {
-    const currentYear = calendarDate.getFullYear();
-    const currentMonth = calendarDate.getMonth();
+  const currentYear = calendarDate.getFullYear();
+  const currentMonth = calendarDate.getMonth();
 
-    const firstDay = new Date(currentYear, currentMonth,0);
-    const lastDay = new Date(currentYear, currentMonth +1, 0);
-    const totalDays = lastDay.getDate();
-    const firstDayIndex = firstDay.getDay();
-    const lastDayIndex = lastDay.getDay();
+  const firstDay = new Date(currentYear, currentMonth, 0);
+  const lastDay = new Date(currentYear, currentMonth + 1, 0);
+  const totalDays = lastDay.getDate();
+  const firstDayIndex = firstDay.getDay();
+  const lastDayIndex = lastDay.getDay();
 
-    const monthYearString = calendarDate.toLocaleString('default', {month: 'long', year: 'numeric'});
-    if (monthYearElement) monthYearElement.textContent = monthYearString;
+  const monthYearString = calendarDate.toLocaleString("default", {
+    month: "long",
+    year: "numeric",
+  });
+  if (monthYearElement) monthYearElement.textContent = monthYearString;
 
-    let datesHTML = '';
+  let datesHTML = "";
 
-    for (let i = firstDayIndex; i > 0; i--) {
-        const prevDate = new Date(currentYear, currentMonth, 0 - i+ 1);
-        datesHTML += `<div class="date inactive">${prevDate.getDate()}</div>`;
-    }
+  for (let i = firstDayIndex; i > 0; i--) {
+    const prevDate = new Date(currentYear, currentMonth, 0 - i + 1);
+    datesHTML += `<div class="date inactive">${prevDate.getDate()}</div>`;
+  }
 
-    for (let i = 1; i <= totalDays; i++) {
-        const date = new Date(currentYear, currentMonth, i);
-        const activeClass = date.toDateString() === new Date().toDateString() ? 'today' : 'active';
-        datesHTML += `<div class = "date ${activeClass}">${i}</div>`;
-    }
+  for (let i = 1; i <= totalDays; i++) {
+    const date = new Date(currentYear, currentMonth, i);
+    const activeClass =
+      date.toDateString() === new Date().toDateString() ? "today" : "active";
+    datesHTML += `<div class = "date ${activeClass}">${i}</div>`;
+  }
 
-    for (let i = 1; i <= 7 - lastDayIndex; i++) {
-        const nextDate = new Date(currentYear, currentMonth + 1, i);
-        datesHTML += `<div class="date inactive">${nextDate.getDate()}</div>`;
-    }
-    if (datesElement) datesElement.innerHTML = datesHTML;
-
-}
+  for (let i = 1; i <= 7 - lastDayIndex; i++) {
+    const nextDate = new Date(currentYear, currentMonth + 1, i);
+    datesHTML += `<div class="date inactive">${nextDate.getDate()}</div>`;
+  }
+  if (datesElement) datesElement.innerHTML = datesHTML;
+};
 
 if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-        calendarDate.setMonth(calendarDate.getMonth() - 1);
-        updateCalendar();
-    })
+  prevBtn.addEventListener("click", () => {
+    calendarDate.setMonth(calendarDate.getMonth() - 1);
+    updateCalendar();
+  });
 }
 if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-        calendarDate.setMonth(calendarDate.getMonth() + 1);
-        updateCalendar();
-    })
+  nextBtn.addEventListener("click", () => {
+    calendarDate.setMonth(calendarDate.getMonth() + 1);
+    updateCalendar();
+  });
 }
 
 updateCalendar();

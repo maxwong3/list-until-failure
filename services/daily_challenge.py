@@ -7,14 +7,21 @@ def strip_accents(text):
     return "".join([c for c in unicodedata.normalize('NFKD', text) if not unicodedata.combining(c)])
 
 def get_daily_challenge():
-    players = todays_challenge()
+    challenge = todays_challenge()
+
     valid_players = []
-    for player in players:
+    valid_ids = set()
+
+    for player in challenge["players"]:
         first = player["nameFirst"] or ""
         last = player["nameLast"] or ""
 
-        full_name = strip_accents(first + " " + last).upper()
+        full_name = strip_accents(f"{first} {last}").upper().strip()
 
         valid_players.append(full_name)
+        valid_ids.add(player["playerID"])
 
-    return valid_players
+    challenge["valid_players"] = valid_players
+    challenge["valid_ids"] = valid_ids
+
+    return challenge

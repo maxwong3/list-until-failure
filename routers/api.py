@@ -89,16 +89,20 @@ def check (name: str):
 def daily_check(name: str):
     name = name.upper().strip()
 
-    valid_players = get_daily_challenge()
+    challenge = get_daily_challenge()
 
-    if name not in valid_players:
+    if name not in challenge["valid_players"]:
         return {"count": 0, "players": []}
-    
-    players = get_player_by_name(name)
+
+    players = [
+        player
+        for player in get_player_by_name(name)
+        if player["playerID"] in challenge["valid_ids"]
+    ]
 
     teams = []
     positions = []
-    
+
     for player in players:
         teams.append(get_teams_by_id(player["playerID"]))
         positions.append(get_positions_by_id(player["playerID"]))
@@ -112,6 +116,8 @@ def daily_check(name: str):
 
 @router.get("/daily")
 def get_daily():
+    challenge = get_daily_challenge()
+
     return {
-        "message": "daily challenge"
+        "title": challenge["title"]
     }
